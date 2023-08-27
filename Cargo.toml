@@ -1,6 +1,6 @@
 [package]
 name = "nonn"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Integer types that are known not to equal any single N."
 license = "MIT"
@@ -9,6 +9,7 @@ homepage = "https://github.com/Vonr/nonn"
 repository = "https://github.com/Vonr/nonn"
 keywords = ["non-n", "memory", "nostd", "no-std"]
 rust-version = "1.57.0"
+include = ["src/lib.rs", "README.md", "build.rs"]
 
 [build-dependencies]
 version_check = "0.9.4"
