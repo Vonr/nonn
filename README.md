@@ -15,12 +15,12 @@ assert_eq!(size_of::<Option<nonn::NonNU32<2>>>(), size_of::<u32>());
 assert_eq!(size_of::<Option<nonn::NonNU64<3>>>(), size_of::<u64>());
 assert_eq!(size_of::<Option<nonn::NonNU128<4>>>(), size_of::<u128>());
 assert_eq!(size_of::<Option<nonn::NonNUsize<5>>>(), size_of::<usize>());
-assert_eq!(size_of::<Option<nonn::NonNI8<6>>>(), size_of::<u8>());
-assert_eq!(size_of::<Option<nonn::NonNI16<7>>>(), size_of::<u16>());
-assert_eq!(size_of::<Option<nonn::NonNI32<8>>>(), size_of::<u32>());
-assert_eq!(size_of::<Option<nonn::NonNI64<9>>>(), size_of::<u64>());
-assert_eq!(size_of::<Option<nonn::NonNI128<10>>>(), size_of::<u128>());
-assert_eq!(size_of::<Option<nonn::NonNIsize<11>>>(), size_of::<usize>());
+assert_eq!(size_of::<Option<nonn::NonNI8<6>>>(), size_of::<i8>());
+assert_eq!(size_of::<Option<nonn::NonNI16<7>>>(), size_of::<i16>());
+assert_eq!(size_of::<Option<nonn::NonNI32<8>>>(), size_of::<i32>());
+assert_eq!(size_of::<Option<nonn::NonNI64<9>>>(), size_of::<i64>());
+assert_eq!(size_of::<Option<nonn::NonNI128<10>>>(), size_of::<i128>());
+assert_eq!(size_of::<Option<nonn::NonNIsize<11>>>(), size_of::<isize>());
 ```
 
 nonn functions in no_std environments.

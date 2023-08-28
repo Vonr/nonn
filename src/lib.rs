@@ -25,7 +25,7 @@ macro_rules! impl_nonn_fmt {
 
 macro_rules! nonn_impl {
     [$($Ty: ident<$Int: ident>($NonZero: ident)),*$(,)?] => {$(
-        /// An integer that is known not to equal zero.
+        /// An integer that is known not to equal to any single value N.
         ///
         /// This enables some memory layout optimization.
         #[doc = concat!("For example, `Option<", stringify!($Ty), "<N>>` is the same size as `", stringify!($Int), "`:")]
@@ -529,8 +529,6 @@ macro_rules! nonn_leading_trailing_zeros {
             impl<const N: $Uint> $Ty<N> {
                 /// Returns the number of leading zeros in the binary representation of `self`.
                 ///
-                /// On many architectures, this function can perform better than `leading_zeros()` on the underlying integer type, as special handling of zero can be avoided.
-                ///
                 /// # Examples
                 ///
                 /// Basic usage:
@@ -549,8 +547,6 @@ macro_rules! nonn_leading_trailing_zeros {
 
                 /// Returns the number of trailing zeros in the binary representation
                 /// of `self`.
-                ///
-                /// On many architectures, this function can perform better than `trailing_zeros()` on the underlying integer type, as special handling of zero can be avoided.
                 ///
                 /// # Examples
                 ///
@@ -595,8 +591,6 @@ macro_rules! nonn_unsigned_operations {
             impl<const N: $Int> $Ty<N> {
                 /// Adds an unsigned integer to a non-N value.
                 /// Checks for overflow and returns [`None`] on overflow.
-                /// As a consequence, the result cannot wrap to zero.
-                ///
                 ///
                 /// # Examples
                 ///
@@ -660,7 +654,6 @@ macro_rules! nonn_unsigned_operations {
                 /// Returns the smallest power of two greater than or equal to n.
                 /// Checks for overflow and returns [`None`]
                 /// if the next power of two is greater than the type’s maximum value.
-                /// As a consequence, the result cannot wrap to zero.
                 ///
                 /// # Examples
                 ///
@@ -695,11 +688,7 @@ macro_rules! nonn_unsigned_operations {
                 }
 
                 /// Returns the base 2 logarithm of the number, rounded down.
-                ///
-                /// This is the same operation as
                 #[doc = concat!("[`", stringify!($Int), "::ilog2`],")]
-                /// except that it has no failure cases to worry about
-                /// since this value can never be zero.
                 ///
                 /// # Examples
                 ///
@@ -713,15 +702,11 @@ macro_rules! nonn_unsigned_operations {
                               without modifying the original"]
                 #[inline]
                 pub const fn ilog2(self) -> u32 {
-                    Self::BITS - 1 - self.leading_zeros()
+                    self.get().ilog2()
                 }
 
                 /// Returns the base 10 logarithm of the number, rounded down.
-                ///
-                /// This is the same operation as
                 #[doc = concat!("[`", stringify!($Int), "::ilog10`],")]
-                /// except that it has no failure cases to worry about
-                /// since this value can never be zero.
                 ///
                 /// # Examples
                 ///
@@ -788,7 +773,7 @@ macro_rules! nonn_signed_operations {
                 /// Checked absolute value.
                 /// Checks for overflow and returns [`None`] if
                 #[doc = concat!("`self == ", stringify!($Ty), "::MIN`.")]
-                /// The result cannot be zero.
+                /// The result cannot be N.
                 ///
                 /// # Example
                 ///
@@ -1110,7 +1095,6 @@ macro_rules! nonn_unsigned_signed_operations {
             impl<const N: $Int> $Ty<N> {
                 /// Multiplies two non-N integers together.
                 /// Checks for overflow and returns [`None`] on overflow.
-                /// As a consequence, the result cannot wrap to zero.
                 ///
                 /// # Examples
                 ///
@@ -1185,7 +1169,6 @@ macro_rules! nonn_unsigned_signed_operations {
 
                 /// Raises non-N value to an integer power.
                 /// Checks for overflow and returns [`None`] on overflow.
-                /// As a consequence, the result cannot wrap to zero.
                 ///
                 /// # Examples
                 ///
@@ -1291,9 +1274,6 @@ macro_rules! nonn_unsigned_is_power_of_two {
 
                 /// Returns `true` if and only if `self == (1 << k)` for some `k`.
                 ///
-                /// On many architectures, this function can perform better than `is_power_of_two()`
-                /// on the underlying integer type, as special handling of zero can be avoided.
-                ///
                 /// # Examples
                 ///
                 /// Basic usage:
@@ -1307,11 +1287,6 @@ macro_rules! nonn_unsigned_is_power_of_two {
                 #[must_use]
                 #[inline]
                 pub const fn is_power_of_two(self) -> bool {
-                    // LLVM 11 normalizes `unchecked_sub(x, 1) & x == 0` to the implementation seen here.
-                    // On the basic x86-64 target, this saves 3 instructions for the zero check.
-                    // On x86_64 with BMI1, being nonn lets it codegen to `BLSR`, which saves an instruction
-                    // compared to the `POPCNT` implementation on the underlying integer type.
-
                     self.get().is_power_of_two()
                 }
 
