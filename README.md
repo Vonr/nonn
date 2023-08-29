@@ -35,4 +35,4 @@ and can thus avoid many of the checks nonn uses.
 nonn currently does not implement `Neg` for its types, as `Neg` on `NonNU*<N>` should in theory result in `NonNI*<-N>`.
 This is currently not possible to my knowledge, even on nightly.
 
-nonn requires at least Rust 1.57.0 to compile, but 1.67.0 or above is required for `ilog10`.
+nonn requires at least Rust 1.57.0 to compile, but 1.67.0 or above is required for `ilog2` and `ilog10`.
